@@ -3,9 +3,29 @@ const { password } = require('./custom.validation');
 
 const register = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    email: Joi.string().required().email().messages({
+      'string.email': 'email:Not a valid email address.',
+      'string.empty': 'email:Please provide your email.',
+      'any.required': 'email:Please provide your email.',
+    }),
+    password: Joi.string().required().custom(password).messages({
+      'string.empty': 'password:Please provide a password.',
+      'any.required': 'password:Please provide a password.',
+    }),
+    confirmPassword: Joi.string().required().equal(Joi.ref('password')).messages({
+      'string.empty': 'confirmPassword:Passwords do not match.',
+      'any.required': 'confirmPassword:Passwords do not match.',
+      'any.ref': 'confirmPassword:Passwords do not match.',
+      'any.only': 'confirmPassword:Passwords do not match.',
+    }),
+    firstName: Joi.string().required().messages({
+      'string.empty': 'firstName:Please provide your first name.',
+      'any.required': 'firstName:Please provide your first name.',
+    }),
+    lastName: Joi.string().required().messages({
+      'string.empty': 'lastName:Please provide your last name.',
+      'any.required': 'lastName:Please provide your last name.',
+    }),
   }),
 };
 
