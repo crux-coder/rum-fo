@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -40,6 +41,13 @@ app.use(compression());
 // enable cors
 app.use(cors());
 app.options('*', cors());
+
+// Serve React build
+app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+});
 
 // jwt authentication
 app.use(passport.initialize());
