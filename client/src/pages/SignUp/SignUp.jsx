@@ -62,22 +62,23 @@ export default function SignIn() {
     setOpenSuccessSnackbar(false);
   };
 
-  const handleErrors = (response) => {
-    if (response.status === 400) {
-      if (response.data.message === 'Email already taken') handleOpenEmailTakenAlert();
-      else handleFormErrors(response.data.message);
-    } else if (response.status === 500) {
-    }
-  };
-
   const handleFormErrors = (errorMessage) => {
     const errorMessages = errorMessage.split(',');
     const errorFields = errorMessages.map((message) => message.split(':'));
     const _errorObj = {};
-    for (let i = 0; i < errorFields.length; i++) {
-      _errorObj[errorFields[i][0]] = errorFields[i][1];
+    for (let i = 0; i < errorFields.length; i += 1) {
+      const [property, value] = errorFields[i];
+      _errorObj[property] = value;
     }
     setFormErrors(_errorObj);
+  };
+
+  const handleErrors = (response) => {
+    if (response.status === 400) {
+      if (response.data.message === 'Email already taken') handleOpenEmailTakenAlert();
+      else handleFormErrors(response.data.message);
+    }
+    // Add case when error is 500
   };
 
   const handleSubmit = (event) => {
@@ -87,8 +88,7 @@ export default function SignIn() {
       .post('/v1/auth/register', {
         ...user,
       })
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
         setFormErrors({});
         setUser(emptyUser);
       })
@@ -98,12 +98,12 @@ export default function SignIn() {
   };
 
   const handleTextFieldChange = (event) => {
-    const value = event.currentTarget.value;
-    const field = event.currentTarget.name;
-    if (formErrors[field]) delete formErrors[field];
+    const { value } = event.currentTarget;
+    const { name } = event.currentTarget;
+    if (formErrors[name]) delete formErrors[name];
     setUser({
       ...user,
-      [field]: value,
+      [name]: value,
     });
   };
 

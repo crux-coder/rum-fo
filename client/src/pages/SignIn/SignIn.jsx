@@ -27,8 +27,6 @@ function Copyright(props) {
 export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log(data);
   };
 
   return (
@@ -107,7 +105,7 @@ export default function SignIn() {
               <Grid item>
                 <RouterLink style={{ textDecoration: 'none' }} to="/sign-up">
                   <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
-                    Don't have an account? Sign Up
+                    Don&apos;t have an account? Sign Up
                   </Typography>
                 </RouterLink>
               </Grid>
