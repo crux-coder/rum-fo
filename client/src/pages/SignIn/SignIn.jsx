@@ -121,7 +121,7 @@ export default function SignIn() {
             {loginErrorAlertOpen && (
               <Grow in={loginErrorAlertOpen} sx={{ mb: 4 }}>
                 <Alert severity="error" variant="filled" onClose={() => setLoginErrorAlertOpen(false)}>
-                  <AlertTitle>Email already registered</AlertTitle>
+                  <AlertTitle>Incorrect email or password.</AlertTitle>
                   If you forgot your password — <strong>reset it here!</strong>
                 </Alert>
               </Grow>
