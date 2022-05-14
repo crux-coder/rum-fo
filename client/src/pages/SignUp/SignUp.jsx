@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -12,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 import { AlertTitle, Grow, Slide, LinearProgress } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 function Copyright(props) {
   return (
@@ -42,8 +42,18 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [user, setUser] = useState(emptyUser);
   const [formErrors, setFormErrors] = useState({});
+  const [registrationInProcess, setRegistrationInProcesss] = useState(false);
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false);
   const [openEmailTakenAlert, setOpenEmailTakenAlert] = useState(false);
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+
+  const handleOpenErrorSnackbar = () => {
+    setOpenErrorSnackbar(true);
+  };
+
+  const handleCloseErrorSnackbar = () => {
+    setOpenErrorSnackbar(false);
+  };
 
   const handleOpenEmailTakenAlert = () => {
     setOpenEmailTakenAlert(true);
@@ -77,22 +87,49 @@ export default function SignIn() {
     if (response.status === 400) {
       if (response.data.message === 'Email already taken') handleOpenEmailTakenAlert();
       else handleFormErrors(response.data.message);
+    } else {
+      handleOpenErrorSnackbar();
     }
-    // Add case when error is 500
+  };
+
+  const sendConfirmationEmail = (data) => {
+    setRegistrationInProcesss(true);
+    axios
+      .post(
+        '/v1/auth/send-verification-email',
+        {
+          ...data.user,
+        },
+        {
+          headers: { Authorization: `Bearer ${data.tokens.access.token}` },
+        }
+      )
+      .then(() => {
+        handleOpenSnackbar();
+        setFormErrors({});
+        setUser(emptyUser);
+        setRegistrationInProcesss(false);
+      })
+      .catch((err) => {
+        setRegistrationInProcesss(false);
+        handleErrors(err.response);
+      });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setRegistrationInProcesss(true);
     axios
       .post('/v1/auth/register', {
         ...user,
       })
-      .then(() => {
-        setFormErrors({});
-        setUser(emptyUser);
-        handleOpenSnackbar();
+      .then((response) => {
+        if (response.status === 201) {
+          sendConfirmationEmail(response.data);
+        }
       })
       .catch((err) => {
+        setRegistrationInProcesss(false);
         handleErrors(err.response);
       });
   };
@@ -222,9 +259,9 @@ export default function SignIn() {
                 />
               </Grid>
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <LoadingButton type="submit" loading={registrationInProcess} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
-            </Button>
+            </LoadingButton>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <RouterLink style={{ textDecoration: 'none' }} to="/sign-in">
@@ -251,6 +288,27 @@ export default function SignIn() {
           backgroundPosition: 'center',
         }}
       />
+      <Snackbar
+        TransitionComponent={TransitionLeft}
+        autoHideDuration={5000}
+        open={openErrorSnackbar}
+        onClose={handleCloseErrorSnackbar}
+        sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+      >
+        <Box>
+          <Alert
+            sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0, width: '100%' }}
+            onClose={handleCloseErrorSnackbar}
+            variant="filled"
+            severity="error"
+          >
+            <AlertTitle>Something went wrong!</AlertTitle>
+            <Typography sx={{ alignItems: 'center' }} variant="body2">
+              Please try again.
+            </Typography>
+          </Alert>
+        </Box>
+      </Snackbar>
       <Snackbar
         TransitionComponent={TransitionLeft}
         autoHideDuration={3000}
