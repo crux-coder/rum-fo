@@ -1,3 +1,3 @@
-import SignIn from './SignIn.jsx';
+import SignIn from './SignIn';
 
 export default SignIn;
