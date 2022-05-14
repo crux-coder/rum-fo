@@ -31,8 +31,15 @@ const register = {
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
+    email: Joi.string().required().email().messages({
+      'string.email': 'email:Not a valid email address.',
+      'string.empty': 'email:Please provide your email.',
+      'any.required': 'email:Please provide your email.',
+    }),
+    password: Joi.string().required().messages({
+      'string.empty': 'password:Please provide a password.',
+      'any.required': 'password:Please provide a password.',
+    }),
   }),
 };
 
