@@ -8,14 +8,14 @@ import BottomBar from './BottomBar';
 
 export default function HomePage() {
   return (
-    <Box container component={Paper} sx={{ minHeight: '100vh' }} square>
-      <Grid>
-        <TopBar />
+    <Box component={Paper} sx={{ minHeight: '100vh' }} square>
+      <TopBar />
+      <Grid container>
         <Grid item sx={{ p: 2 }} xs={12}>
           <Outlet />
         </Grid>
-        <BottomBar />
       </Grid>
+      <BottomBar />
     </Box>
   );
 }

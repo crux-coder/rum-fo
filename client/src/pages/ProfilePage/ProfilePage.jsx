@@ -48,7 +48,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <Grid item xs={12} component={Paper} elevation={2} square container>
+    <Grid item xs={12} component={Paper} elevation={2} square>
       <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: '100%' }}>
         <Tabs
           orientation="vertical"
