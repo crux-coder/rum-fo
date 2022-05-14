@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import ProfilePage from './pages/ProfilePage';
 import ROUTES from './util/routes';
 import './App.css';
+import ProtectedRoute from './auth/ProtectedRoute';
 
 const theme = createTheme({
   palette: {
@@ -28,31 +30,30 @@ const theme = createTheme({
 });
 
 function App() {
-  const location = useLocation();
-  const [displayLocation, setDisplayLocation] = useState(location);
-  const [transitionStage, setTransistionStage] = useState('fadeIn');
-
-  useEffect(() => {
-    if (location !== displayLocation) setTransistionStage('fadeOut');
-  }, [location, displayLocation]);
-
   return (
     <ThemeProvider theme={theme}>
-      <div
-        className={`${transitionStage}`}
-        onAnimationEnd={() => {
-          if (transitionStage === 'fadeOut') {
-            setTransistionStage('fadeIn');
-            setDisplayLocation(location);
+      <Routes>
+        <Route
+          exact
+          path={ROUTES.HOME}
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
           }
-        }}
-      >
-        <Routes location={displayLocation}>
-          <Route exact path="/" element={<Navigate to={ROUTES.SIGN_IN} />} />
-          <Route exact path={ROUTES.SIGN_IN} element={<SignIn />} />
-          <Route exact path={ROUTES.SIGN_UP} element={<SignUp />} />
-        </Routes>
-      </div>
+        />
+        <Route
+          exact
+          path={ROUTES.PROFILE}
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route exact path={ROUTES.SIGN_IN} element={<SignIn />} />
+        <Route exact path={ROUTES.SIGN_UP} element={<SignUp />} />
+      </Routes>
     </ThemeProvider>
   );
 }
