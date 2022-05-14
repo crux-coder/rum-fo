@@ -25,7 +25,7 @@ const emptyUser = {
   confirmPassword: '',
 };
 
-export default function SignIn() {
+export default function SignUp() {
   const navigate = useNavigate();
   const [user, setUser] = useState(emptyUser);
   const [formErrors, setFormErrors] = useState({});

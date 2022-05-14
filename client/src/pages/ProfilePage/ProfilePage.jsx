@@ -9,8 +9,6 @@ export default function ProfilePage() {
       <Grid
         item
         xs={12}
-        sm={8}
-        md={6}
         component={Paper}
         elevation={6}
         square
