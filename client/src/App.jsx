@@ -3,10 +3,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import ProfilePage from './pages/ProfilePage';
 import ROUTES from './util/routes';
 import './App.css';
 import ProtectedRoute from './auth/ProtectedRoute';
+import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 const theme = createTheme({
   palette: {
@@ -34,23 +35,15 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route
-          exact
           path={ROUTES.HOME}
           element={
             <ProtectedRoute>
-              <ProfilePage />
+              <HomePage />
             </ProtectedRoute>
           }
-        />
-        <Route
-          exact
-          path={ROUTES.PROFILE}
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        </Route>
         <Route exact path={ROUTES.SIGN_IN} element={<SignIn />} />
         <Route exact path={ROUTES.SIGN_UP} element={<SignUp />} />
       </Routes>

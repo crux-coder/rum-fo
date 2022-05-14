@@ -5,18 +5,8 @@ import Grid from '@mui/material/Grid';
 
 export default function ProfilePage() {
   return (
-    <Grid container component="main">
-      <Grid
-        item
-        xs={12}
-        component={Paper}
-        elevation={6}
-        square
-        container
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-      >
+    <Grid>
+      <Grid item xs={12} component={Paper} elevation={6} square container>
         <Box
           sx={{
             mx: 'auto',

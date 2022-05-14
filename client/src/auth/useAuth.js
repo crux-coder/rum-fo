@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { storedUser, storedAccessToken, storedRefreshToken } from '../store/userSlice';
+import ROUTES from '../util/routes';
 
 const useAuth = () => {
   const user = useSelector((state) => state.userData.user);
@@ -12,7 +13,10 @@ const useAuth = () => {
     dispatch(storedUser(data.user));
     dispatch(storedAccessToken(data.tokens.access));
     dispatch(storedRefreshToken(data.tokens.refresh));
-    navigate('/profile');
+    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('accessToken', JSON.stringify(data.tokens.access.token));
+    localStorage.setItem('refreshToken', JSON.stringify(data.tokens.refresh.token));
+    navigate(ROUTES.HOME);
   };
 
   // call this function to sign out logged in user
@@ -20,7 +24,10 @@ const useAuth = () => {
     dispatch(storedUser(null));
     dispatch(storedAccessToken(''));
     dispatch(storedRefreshToken(''));
-    navigate('/', { replace: true });
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate(ROUTES.SIGN_IN, { replace: true });
   };
   return {
     user,
