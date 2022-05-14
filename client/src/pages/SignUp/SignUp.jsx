@@ -83,7 +83,6 @@ export default function SignIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleOpenSnackbar();
     axios
       .post('/v1/auth/register', {
         ...user,
@@ -91,6 +90,7 @@ export default function SignIn() {
       .then(() => {
         setFormErrors({});
         setUser(emptyUser);
+        handleOpenSnackbar();
       })
       .catch((err) => {
         handleErrors(err.response);
