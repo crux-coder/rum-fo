@@ -11,7 +11,7 @@ export default function HomePage() {
     <Box container component={Paper} sx={{ minHeight: '100vh' }} square>
       <Grid>
         <TopBar />
-        <Grid item sx={{ p: 2 }} xs={12} container>
+        <Grid item sx={{ p: 2 }} xs={12}>
           <Outlet />
         </Grid>
         <BottomBar />
