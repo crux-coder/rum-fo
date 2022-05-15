@@ -62,9 +62,6 @@ export default function TopBar() {
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
-              PaperProps={{
-                square: true,
-              }}
             >
               <MenuItem component={Link} to={ROUTES.PROFILE} onClick={handleClose}>
                 <ListItemIcon>
