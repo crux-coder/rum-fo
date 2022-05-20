@@ -7,9 +7,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { AlertTitle, LinearProgress, Slide } from '@mui/material';
+import { AlertTitle, Divider, LinearProgress, Slide } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Copyright } from '../../components';
 import ROUTES from '../../util/routes';
@@ -71,7 +71,10 @@ export default function ResetPassword() {
       .post(`/v1/auth/reset-password?token=${searchParams.get('token')}`, {
         ...user,
       })
-      .then(() => {})
+      .then((response) => {
+        if (response.status === 204) navigate(ROUTES.SIGN_IN);
+        setRegistrationInProcesss(false);
+      })
       .catch((err) => {
         setRegistrationInProcesss(false);
         handleErrors(err.response);
@@ -155,7 +158,31 @@ export default function ResetPassword() {
               Reset Password
             </LoadingButton>
           </Box>
-          <Copyright sx={{ mt: 5 }} />
+          <Divider />
+          <Grid container spacing={0}>
+            <Grid item xs={5}>
+              <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_IN} variant="body2">
+                <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="right" variant="body1">
+                  Sign In
+                </Typography>
+              </RouterLink>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography textAlign="center" color="textSecondary" variant="body1">
+                OR
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_UP}>
+                <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="left" variant="body1">
+                  Sign Up
+                </Typography>
+              </RouterLink>
+            </Grid>
+            <Grid item xs={12}>
+              <Copyright sx={{ mt: 7 }} />
+            </Grid>
+          </Grid>
         </Box>
       </Grid>
       <Snackbar
@@ -164,6 +191,7 @@ export default function ResetPassword() {
         open={openErrorSnackbar}
         onClose={handleCloseErrorSnackbar}
         sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Box>
           <Alert
@@ -172,7 +200,7 @@ export default function ResetPassword() {
             variant="filled"
             severity="error"
           >
-            <AlertTitle>Something went wrong!</AlertTitle>
+            <AlertTitle>Reset password link expired!</AlertTitle>
             <Typography sx={{ alignItems: 'center' }} variant="body2">
               Please try again.
             </Typography>

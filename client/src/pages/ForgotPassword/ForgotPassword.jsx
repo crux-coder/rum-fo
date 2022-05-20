@@ -5,14 +5,16 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Alert, Grow } from '@mui/material';
+import { Alert, Divider, Grow } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
+import { Link as RouterLink } from 'react-router-dom';
 import { Copyright } from '../../components';
+import ROUTES from '../../util/routes';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const [loginProcess, setLoginProcess] = useState(false);
+  const [sendingResetRequest, setSendingResetRequest] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [emailSent, setEmailSent] = useState(false);
 
@@ -38,17 +40,17 @@ export default function ForgotPassword() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoginProcess(true);
+    setSendingResetRequest(true);
     axios
       .post('/v1/auth/forgot-password', {
         email,
       })
       .then(() => {
-        setLoginProcess(false);
+        setSendingResetRequest(false);
         setEmailSent(true);
       })
       .catch((err) => {
-        setLoginProcess(false);
+        setSendingResetRequest(false);
         handleErrors(err.response);
       });
   };
@@ -109,14 +111,45 @@ export default function ForgotPassword() {
                   autoComplete="email"
                   value={email}
                   onChange={handleTextFieldChange}
+                  error={formErrors.email}
+                  helperText={formErrors.email && formErrors.email}
                 />
-                <LoadingButton loading={loginProcess} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                <LoadingButton
+                  loading={sendingResetRequest}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
                   Reset Password
                 </LoadingButton>
               </>
             )}
-
-            <Copyright sx={{ mt: 5 }} />
+            <Divider />
+            <Grid container spacing={0}>
+              <Grid item xs={5}>
+                <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_IN} variant="body2">
+                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="right" variant="body1">
+                    Sign In
+                  </Typography>
+                </RouterLink>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography textAlign="center" color="textSecondary" variant="body1">
+                  OR
+                </Typography>
+              </Grid>
+              <Grid item xs={5}>
+                <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_UP}>
+                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="left" variant="body1">
+                    Sign Up
+                  </Typography>
+                </RouterLink>
+              </Grid>
+              <Grid item xs={12}>
+                <Copyright sx={{ mt: 7 }} />
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Grid>

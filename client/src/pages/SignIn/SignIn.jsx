@@ -99,23 +99,23 @@ export default function SignIn() {
         md={6}
         component={Paper}
         elevation={6}
-        square
         container
         direction="row"
         alignItems="center"
         justifyContent="center"
-        sx={{
-          borderLeft: '2px solid',
-          borderColor: 'primary.main',
-        }}
       >
         <Box
+          component={Paper}
+          elevation={8}
           sx={{
+            p: 8,
             my: 8,
             mx: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            border: '2px solid',
+            borderColor: 'primary.main',
           }}
         >
           <Typography component="h1" variant="h5">
@@ -171,22 +171,24 @@ export default function SignIn() {
               Sign In
             </LoadingButton>
             <Grid container>
-              <Grid item xs>
+              <Grid item xs={6}>
                 <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.FORGOT_PASSWORD} variant="body2">
                   <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
                     Forgot password?
                   </Typography>
                 </RouterLink>
               </Grid>
-              <Grid item>
+              <Grid item xs={6}>
                 <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_UP}>
-                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
+                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="right" variant="body2">
                     Don&apos;t have an account? Sign Up
                   </Typography>
                 </RouterLink>
               </Grid>
+              <Grid item xs={12}>
+                <Copyright sx={{ mt: 7 }} />
+              </Grid>
             </Grid>
-            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Box>
       </Grid>

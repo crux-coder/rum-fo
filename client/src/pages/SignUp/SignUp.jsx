@@ -152,12 +152,17 @@ export default function SignUp() {
         }}
       >
         <Box
+          component={Paper}
+          elevation={8}
           sx={{
+            p: 8,
             my: 8,
             mx: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            border: '2px solid',
+            borderColor: 'primary.main',
           }}
         >
           <Typography component="h1" variant="h5">

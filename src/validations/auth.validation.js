@@ -57,7 +57,11 @@ const refreshTokens = {
 
 const forgotPassword = {
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    email: Joi.string().email().required().messages({
+      'string.email': 'email:Not a valid email address.',
+      'string.empty': 'email:Please provide your email.',
+      'any.required': 'email:Please provide your email.',
+    }),
   }),
 };
 
@@ -66,8 +70,16 @@ const resetPassword = {
     token: Joi.string().required(),
   }),
   body: Joi.object().keys({
-    password: Joi.string().required().custom(password),
-    confirmPassword: Joi.string().required().equal(Joi.ref('password')),
+    password: Joi.string().required().custom(password).messages({
+      'string.empty': 'password:Please provide a password.',
+      'any.required': 'password:Please provide a password.',
+    }),
+    confirmPassword: Joi.string().required().equal(Joi.ref('password')).messages({
+      'string.empty': 'confirmPassword:Passwords do not match.',
+      'any.required': 'confirmPassword:Passwords do not match.',
+      'any.ref': 'confirmPassword:Passwords do not match.',
+      'any.only': 'confirmPassword:Passwords do not match.',
+    }),
   }),
 };
 
