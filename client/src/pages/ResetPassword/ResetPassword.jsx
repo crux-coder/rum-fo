@@ -7,31 +7,29 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { AlertTitle, Grow, LinearProgress, Slide } from '@mui/material';
+import { AlertTitle, LinearProgress, Slide } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Copyright } from '../../components';
+import ROUTES from '../../util/routes';
 
 function TransitionLeft(props) {
   return <Slide {...props} direction="right" />;
 }
 
 const emptyUser = {
-  firstName: '',
-  lastName: '',
-  email: '',
   password: '',
   confirmPassword: '',
 };
 
-export default function SignUp() {
+export default function ResetPassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [user, setUser] = useState(emptyUser);
   const [formErrors, setFormErrors] = useState({});
   const [registrationInProcess, setRegistrationInProcesss] = useState(false);
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false);
-  const [openEmailTakenAlert, setOpenEmailTakenAlert] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
   const handleOpenErrorSnackbar = () => {
@@ -42,20 +40,8 @@ export default function SignUp() {
     setOpenErrorSnackbar(false);
   };
 
-  const handleOpenEmailTakenAlert = () => {
-    setOpenEmailTakenAlert(true);
-  };
-
-  const handleCloseEmailTakenAlert = () => {
-    setOpenEmailTakenAlert(false);
-  };
-
-  const handleOpenSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-
   const handleCloseSnackbar = () => {
-    navigate('/sign-in');
+    navigate(ROUTES.SIGN_IN);
     setOpenSuccessSnackbar(false);
   };
 
@@ -72,49 +58,20 @@ export default function SignUp() {
 
   const handleErrors = (response) => {
     if (response.status === 400) {
-      if (response.data.message === 'Email already taken') handleOpenEmailTakenAlert();
-      else handleFormErrors(response.data.message);
+      handleFormErrors(response.data.message);
     } else {
       handleOpenErrorSnackbar();
     }
-  };
-
-  const sendConfirmationEmail = (data) => {
-    setRegistrationInProcesss(true);
-    axios
-      .post(
-        '/v1/auth/send-verification-email',
-        {
-          ...data.user,
-        },
-        {
-          headers: { Authorization: `Bearer ${data.tokens.access.token}` },
-        }
-      )
-      .then(() => {
-        handleOpenSnackbar();
-        setFormErrors({});
-        setUser(emptyUser);
-        setRegistrationInProcesss(false);
-      })
-      .catch((err) => {
-        setRegistrationInProcesss(false);
-        handleErrors(err.response);
-      });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setRegistrationInProcesss(true);
     axios
-      .post('/v1/auth/register', {
+      .post(`/v1/auth/reset-password?token=${searchParams.get('token')}`, {
         ...user,
       })
-      .then((response) => {
-        if (response.status === 201) {
-          sendConfirmationEmail(response.data);
-        }
-      })
+      .then(() => {})
       .catch((err) => {
         setRegistrationInProcesss(false);
         handleErrors(err.response);
@@ -137,8 +94,6 @@ export default function SignUp() {
       <Grid
         item
         xs={12}
-        sm={8}
-        md={6}
         component={Paper}
         elevation={6}
         square
@@ -146,78 +101,24 @@ export default function SignUp() {
         direction="row"
         alignItems="center"
         justifyContent="center"
-        sx={{
-          borderRight: '2px solid',
-          borderColor: 'primary.main',
-        }}
       >
         <Box
+          component={Paper}
+          elevation={6}
           sx={{
-            my: 8,
-            mx: 4,
+            p: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            border: '2px solid',
+            borderColor: 'primary.main',
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign up
+            Reset Password
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            {openEmailTakenAlert && (
-              <Grow in={openEmailTakenAlert} sx={{ mb: 4 }}>
-                <Alert severity="error" variant="filled" onClose={handleCloseEmailTakenAlert}>
-                  <AlertTitle>Email already registered</AlertTitle>
-                  If you forgot your password — <strong>reset it here!</strong>
-                </Alert>
-              </Grow>
-            )}
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  size="small"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  value={user.firstName}
-                  onChange={handleTextFieldChange}
-                  error={!!formErrors.firstName}
-                  helperText={!!formErrors.firstName && formErrors.firstName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  size="small"
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  value={user.lastName}
-                  onChange={handleTextFieldChange}
-                  error={!!formErrors.lastName}
-                  helperText={!!formErrors.lastName && formErrors.lastName}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  size="small"
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="off"
-                  value={user.email}
-                  onChange={handleTextFieldChange}
-                  error={!!formErrors.email}
-                  helperText={!!formErrors.email && formErrors.email}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -251,34 +152,12 @@ export default function SignUp() {
               </Grid>
             </Grid>
             <LoadingButton type="submit" loading={registrationInProcess} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
+              Reset Password
             </LoadingButton>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <RouterLink style={{ textDecoration: 'none' }} to="/sign-in">
-                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
-                    Already have an account? Sign in
-                  </Typography>
-                </RouterLink>
-              </Grid>
-            </Grid>
           </Box>
           <Copyright sx={{ mt: 5 }} />
         </Box>
       </Grid>
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
       <Snackbar
         TransitionComponent={TransitionLeft}
         autoHideDuration={5000}

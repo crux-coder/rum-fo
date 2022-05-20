@@ -3,17 +3,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { AlertTitle, Grow, Alert } from '@mui/material';
+import { Alert, AlertTitle, Grow } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
 import { Copyright } from '../../components';
 import useAuth from '../../auth/useAuth';
+import ROUTES from '../../util/routes';
 
 const emptyCredentials = {
   email: '',
@@ -104,6 +104,10 @@ export default function SignIn() {
         direction="row"
         alignItems="center"
         justifyContent="center"
+        sx={{
+          borderLeft: '2px solid',
+          borderColor: 'primary.main',
+        }}
       >
         <Box
           sx={{
@@ -122,7 +126,18 @@ export default function SignIn() {
               <Grow in={loginErrorAlertOpen} sx={{ mb: 4 }}>
                 <Alert severity="error" variant="filled" onClose={() => setLoginErrorAlertOpen(false)}>
                   <AlertTitle>Incorrect email or password.</AlertTitle>
-                  If you forgot your password — <strong>reset it here!</strong>
+                  If you forgot your password —{' '}
+                  <strong>
+                    <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.FORGOT_PASSWORD}>
+                      <Typography
+                        display="inline"
+                        sx={{ textDecoration: 'underline', color: 'primary.contrastText' }}
+                        variant="body"
+                      >
+                        reset it here!
+                      </Typography>
+                    </RouterLink>
+                  </strong>
                 </Alert>
               </Grow>
             )}
@@ -157,12 +172,14 @@ export default function SignIn() {
             </LoadingButton>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+                <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.FORGOT_PASSWORD} variant="body2">
+                  <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
+                    Forgot password?
+                  </Typography>
+                </RouterLink>
               </Grid>
               <Grid item>
-                <RouterLink style={{ textDecoration: 'none' }} to="/sign-up">
+                <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_UP}>
                   <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} variant="body2">
                     Don&apos;t have an account? Sign Up
                   </Typography>

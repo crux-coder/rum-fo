@@ -1,6 +1,6 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import ROUTES from './util/routes';
@@ -8,6 +8,8 @@ import './App.css';
 import ProtectedRoute from './auth/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const theme = createTheme({
   palette: {
@@ -46,6 +48,8 @@ function App() {
         </Route>
         <Route exact path={ROUTES.SIGN_IN} element={<SignIn />} />
         <Route exact path={ROUTES.SIGN_UP} element={<SignUp />} />
+        <Route exact path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route exact path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
       </Routes>
     </ThemeProvider>
   );

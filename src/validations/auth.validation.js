@@ -67,6 +67,7 @@ const resetPassword = {
   }),
   body: Joi.object().keys({
     password: Joi.string().required().custom(password),
+    confirmPassword: Joi.string().required().equal(Joi.ref('password')),
   }),
 };
 
