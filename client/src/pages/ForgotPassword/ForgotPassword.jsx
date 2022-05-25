@@ -126,7 +126,7 @@ export default function ForgotPassword() {
               </>
             )}
             <Divider />
-            <Grid container spacing={0}>
+            <Grid container spacing={0} sx={{ mt: 3 }}>
               <Grid item xs={5}>
                 <RouterLink style={{ textDecoration: 'none' }} to={ROUTES.SIGN_IN} variant="body2">
                   <Typography sx={{ textDecoration: 'underline', color: 'primary.main' }} textAlign="right" variant="body1">

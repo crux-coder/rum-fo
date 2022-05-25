@@ -42,19 +42,18 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
-// Serve React build
-app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
-});
-
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
+  // Serve React build
+  app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+  });
   app.use('/v1/auth', authLimiter);
 }
 

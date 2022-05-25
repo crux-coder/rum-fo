@@ -4,7 +4,8 @@ const ROUTES = {
   PROFILE: '/profile',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
-  HOME: '/',
+  MAIN: '/',
+  HOME: '/home',
 };
 
 export default ROUTES;
